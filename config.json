@@ -1,0 +1,44 @@
+{
+	"type": "minecraftBedrock",
+	"name": "Core Framework",
+	"namespace": "bridge",
+	"authors": [
+		"xFallen54x"
+	],
+	"targetVersion": "1.20.1",
+	"description": "v1.0.0: The Core Framework is a ScriptAPI wrapper, that aims to make programming with Minecraft's ScriptAPI easier on development. This is the main Framework behavior pack used to test and debug core features.",
+	"experimentalGameplay": {
+		"holidayCreatorFeatures": false,
+		"creationOfCustomBiomes": false,
+		"upcomingCreatorFeatures": false,
+		"enableGameTestFramework": true,
+		"experimentalMolangFeatures": true,
+		"educationEdition": false
+	},
+	"bdsProject": false,
+	"packs": {
+		"behaviorPack": "./BP"
+	},
+	"worlds": [
+		"./worlds/*"
+	],
+	"compiler": {
+		"plugins": [
+			"generatorScripts",
+			"typeScript",
+			"entityIdentifierAlias",
+			"customEntityComponents",
+			"customItemComponents",
+			"customBlockComponents",
+			"customCommands",
+			"moLang",
+			"formatVersionCorrection",
+			[
+				"simpleRewrite",
+				{
+					"packName": "Core Framework"
+				}
+			]
+		]
+	}
+}
