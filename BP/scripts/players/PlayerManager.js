@@ -1,7 +1,10 @@
 import {
   world,
   system,
-  Player as IPlayer
+  Player as IPlayer,
+  PlayerJoinAfterEvent,
+  PlayerLeaveAfterEvent,
+  PlayerSpawnAfterEvent
 } from "@minecraft/server";
 import { Client } from "../client/Client";
 import { Player } from "./Player";
@@ -43,7 +46,7 @@ export class PlayerManager {
    * @param {IPlayer} player - The player to remove.
    */
   removePlayer(player) {
-    this.Players.delete(player);
+    this.Players.delete(player.name);
   }
 
   /**
@@ -68,10 +71,7 @@ export class PlayerManager {
     if (this.Players.has(name)) {
       return this.Players.get(name);
     }
-    if (this.world.getAllPlayers().find(plr => plr.name === name)) {
-      const player = this.addPlayerByName(name);
-      return player;
-    }
+
     return;
   }
 
@@ -82,13 +82,19 @@ export class PlayerManager {
     // Listen for the "playerJoin" event
     this.client.on(
       "playerJoin",
-      (/** @type {{ playerName: string; }} */ data) => {
+      (/** @type {PlayerJoinAfterEvent} */ player) => {
         // If the joining player is not already in the player manager, add them
-        if (!this.Players.has(data.playerName)) {
-          // Wait for a short time before adding the player to ensure they have fully joined
-          system.runTimeout(() => {
-            this.addPlayer(this.getIPlayer(data.playerName));
-          }, 100);
+        if (!this.getPlayer(player.playerName)) {
+          // Listen for the "playerSpawn" event
+          this.client.on("playerSpawn",
+            (/** @type {PlayerSpawnAfterEvent} */ data) => {
+              // If the spawing player is equal to the joining player
+              if (data.player.name === player.playerName) {
+                this.addPlayer(data.player)
+              }
+            },
+            "after"
+          );
         }
       },
       "after"
@@ -97,9 +103,9 @@ export class PlayerManager {
     // Listen for the "playerLeave" event
     this.client.on(
       "playerLeave",
-      (/** @type {{ playerName: string; }} */ data) => {
+      (/** @type {PlayerLeaveAfterEvent} */ data) => {
         // If the leaving player is in the player manager, remove them
-        if (this.Players.has(data.playerName)) {
+        if (this.getPlayer(data.playerName)) {
           const player = this.getIPlayer(data.playerName);
           this.removePlayer(player);
         }

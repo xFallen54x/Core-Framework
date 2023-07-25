@@ -15,7 +15,7 @@
 	},
 	"header": {
 		"name": "Core Framework",
-		"description": "v1.1.25: The Core Framework is a ScriptAPI wrapper, that aims to make programming with Minecraft's ScriptAPI easier on development. This is the main Framework behavior pack used to test and debug core features.",
+		"description": "v1.1.26: The Core Framework is a ScriptAPI wrapper, that aims to make programming with Minecraft's ScriptAPI easier on development. This is the main Framework behavior pack used to test and debug core features.",
 		"min_engine_version": [
 			1,
 			20,

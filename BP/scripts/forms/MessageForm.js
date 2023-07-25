@@ -63,7 +63,7 @@ export class MessageForm {
 
     /**
      * Sends the form to the player.
-     * @param {(result: MessageFormResponse) => void} callback The response of the form.
+     * @param {(result) => void} callback The response of the form.
      * @returns
      */
     send(callback) {

@@ -1,5 +1,11 @@
-import { system } from "@minecraft/server"
+import {
+  BlockBreakAfterEvent,
+  system,
+  world
+} from "@minecraft/server";
 import { Client } from "./client/Client";
+
+import { getCoordinatesBetween } from "./utils/index"
 
 import {
   Player
@@ -12,7 +18,8 @@ import {
  */
 const client = new Client();
 
-// Listen for the "chatSend" event
-client.on("chatSend", (/** @type {ChatSendBeforeEvent} */ data) => {
+client.on('blockBreak', async (/** @type {BlockBreakAfterEvent} */ data) => {
 
-}, "before");
+}, "after")
+
+
