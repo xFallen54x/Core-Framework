@@ -112,21 +112,16 @@ class Player {
   }
 
   /**
-   * Check if the player has all specified tags
-   * @param {Array<string>} tags - An array of tags to check for
-   * @returns {boolean} True if the player has all specified tags, false otherwise.
-   */
-  hasTags(tags) {
-    if (!Array.isArray(tags)) {
-      throw new Error('Tags must be an array');
-    }
-    let hasAllTags = true;
-    for (const tag of tags) {
-      if (this.hasTag(tag)) continue;
-      hasAllTags = false;
-    }
-    return hasAllTags;
+ * Check if the player has all specified tags
+ * @param {Array<string>} tags - An array of tags to check for
+ * @returns {boolean} True if the player has all specified tags, false otherwise.
+ */
+hasTags(tags) {
+  if (!Array.isArray(tags)) {
+    throw new Error('Tags must be an array');
   }
+  return tags.every(tag => this.hasTag(tag));
+}
 
   /**
    * Teleport the player to a specific location.
@@ -144,7 +139,7 @@ class Player {
       throw new Error('Coordinates must be numbers');
     }
     
-    const location = this._IPlayer.location;
+    const location = this.getPos();
     
     location.x = x;
     location.y = y;
