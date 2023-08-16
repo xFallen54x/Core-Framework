@@ -1,95 +1,161 @@
-import { Player as IPlayer } from "@minecraft/server";
+// Import system, world, and Player from "@minecraft/server" module
+import {
+  system,
+  world,
+  Player as IPlayer,
+} from "@minecraft/server"
 
-/**
- * Player class that extends the functionality of the IPlayer class from the @minecraft/server module.
-  */
-export class Player {
-   /**
-       * Creates a new Player instance.
-         * @param {IPlayer} player - The IPlayer instance to extend.
-            */
-   constructor(player) {
-      this._IPlayer = player;
-      this.name = player.name;
-      this.displayName = player.nameTag;
-   }
+// Define a Player class
+class Player {
+  /**
+   * Constructor for the Player class
+   * @param {IPlayer} player - The player object from the "@minecraft/server" module
+   */
+  constructor(player) {
+    this._IPlayer = player
+    this.name = player.name
+    this.displayName = player.nameTag
+  }
 
-   /**
-      * Returns the IPlayer instance associated with this Player instance.
-         * @returns {IPlayer} The IPlayer instance.
-            */
-   getIPlayer() {
-      return this._IPlayer;
-   }
+  /**
+   * Get the position of the player
+   * @returns {Object} The location of the player
+   */
+  getPos() {
+    return this._IPlayer.location
+  }
 
-   /**
-      * Checks if the player has a specific tag.
-         * @param {string} tag - The tag to check for.
-            * @returns {boolean} True if the player has the tag, false otherwise.
-               */
-   hasTag(tag) {
-      return this._IPlayer.hasTag(tag);
-   }
+  /**
+   * Set the display name of the player
+   * @param {string} name - The new display name for the player
+   * @param {string} [color] - The color code for the display name (optional)
+   */
+  setDisplayName(name, color) {
+    if (color) {
+      this.displayName = `${color}${name}`
+      this._IPlayer.nameTag = this.displayName
+    } else {
+      this.displayName = name
+      this._IPlayer.nameTag = name
+    }
+  }
 
-   /**
-      * Checks if the player has all of the specified tags.
-         * @param {string[]} tags - An array of tags to check for.
-            * @returns {boolean} True if the player has all of the tags, false otherwise.
-               */
-   hasTags(tags) {
-      return tags.every((tag) => this.hasTag(tag));
-   }
+  /**
+   * Add a tag to the player
+   * @param {string} tag - The tag to add to the player
+   */
+  addTag(tag) {
+    if (typeof tag !== 'string') {
+      throw new Error('Tag must be a string');
+    }
+    this._IPlayer.addTag(tag)
+  }
 
-   /**
-      * Adds a tag to the player.
-         * @param {string} tag - The tag to add.
-            */
-   addTag(tag) {
-      if (!this.hasTag(tag)) {
-         this._IPlayer.addTag(tag);
-      }
-   }
+  /**
+   * Remove a tag from the player
+   * @param {string} tag - The tag to remove from the player
+   */
+  removeTag(tag) {
+    if (typeof tag !== 'string') {
+      throw new Error('Tag must be a string');
+    }
+    this._IPlayer.removeTag(tag)
+  }
 
-   /**
-      * Adds multiple tags to the player.
-         * @param {string[]} tags - An array of tags to add.
-            */
-   addTags(tags) {
-      tags.forEach((tag) => this.addTag(tag));
-   }
+  /**
+   * Check if the player has a specific tag
+   * @param {string} tag - The tag to check for
+   * @returns {boolean} True if the player has the tag, false otherwise
+   */
+  hasTag(tag) {
+    if (typeof tag !== 'string') {
+      throw new Error('Tag must be a string');
+    }
+    return this._IPlayer.hasTag(tag);
+  }
 
-   /**
-      * Removes a tag from the player.
-         * @param {string} tag - The tag to remove.
-            */
-   removeTag(tag) {
+  /**
+   * Get all tags of the player
+   * @returns {Array<string>} An array of all tags of the player
+   */
+  getTags() {
+    return this._IPlayer.getTags()
+  }
+
+  /**
+   * Add multiple tags to the player
+   * @param {Array<string>} tags - An array of tags to add to the player
+   */
+  addTags(tags) {
+    if (!Array.isArray(tags)) {
+      throw new Error('Tags must be an array');
+    }
+    for (const tag of tags) {
+      if (this.hasTag(tag)) continue;
+      this.addTag(tag)
+    }
+  }
+
+  /**
+   * Remove multiple tags from the player
+   * @param {Array<string>} tags - An array of tags to remove from the player
+   */
+  removeTags(tags) {
+    if (!Array.isArray(tags)) {
+      throw new Error('Tags must be an array');
+    }
+    for (const tag of tags) {
       if (this.hasTag(tag)) {
-         this._IPlayer.removeTag(tag);
+        this.removeTag(tag)
       }
-   }
+    }
+  }
 
-   /**
-      * Removes multiple tags from the player.
-         * @param {string[]} tags - An array of tags to remove.
-            */
-   removeTags(tags) {
-      tags.forEach((tag) => this.removeTag(tag));
-   }
+  /**
+   * Check if the player has all specified tags
+   * @param {Array<string>} tags - An array of tags to check for
+   * @returns {boolean} True if the player has all specified tags, false otherwise.
+   */
+  hasTags(tags) {
+    if (!Array.isArray(tags)) {
+      throw new Error('Tags must be an array');
+    }
+    let hasAllTags = true;
+    for (const tag of tags) {
+      if (this.hasTag(tag)) continue;
+      hasAllTags = false;
+    }
+    return hasAllTags;
+  }
 
-   /**
-      * Returns an array of all tags associated with the player.
-         * @returns {string[]} An array of tags.
-            */
-   getTags() {
-      return this._IPlayer.getTags();
-   }
+  /**
+   * Teleport the player to a specific location.
+   *
+   * @param {number} x - The x-coordinate of the location.
+   * @param {number} y - The y-coordinate of the location.
+   * @param {number} z - The z-coordinate of the location.
+   */
+  teleport(x, y, z) {
+    if (
+      typeof x !== 'number' ||
+      typeof y !== 'number' ||
+      typeof z !== 'number'
+    ) {
+      throw new Error('Coordinates must be numbers');
+    }
+    
+    const location = this._IPlayer.location;
+    
+    location.x = x;
+    location.y = y;
+    location.z = z;
+    
+    this._IPlayer.teleport(location);
+    
+    return true;
+  }
 
-   /**
-      * Sets the display name of the player.
-         * @param {string} name - The new display name for the player.
-            */
-   setDisplayName(name) {
-      this.displayName = name;
-      this._IPlayer.nameTag = name;
-   }
 }
+
+// Export Player class as a named export.
+export { Player };
