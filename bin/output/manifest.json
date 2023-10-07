@@ -3,7 +3,7 @@
   "header": {
     "name": "Bedrock Addons v2.0.1",
     "description": "Script API Template",
-    "uuid": "80333d5b-d44b-437c-85b3-acc453c5e037",
+    "uuid": "c8a6b4aa-34f9-49d4-8dd6-7b4c4de829b7",
     "version": [
       0,
       1,
@@ -19,7 +19,7 @@
     {
       "type": "script",
       "language": "javascript",
-      "uuid": "cc3f8be2-5767-4d43-97fb-b44bdcdedca3",
+      "uuid": "5d61c28b-925e-4ca6-82c1-f7602950de5d",
       "entry": "scripts/main.js",
       "version": [
         0,

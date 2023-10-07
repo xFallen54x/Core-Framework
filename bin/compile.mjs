@@ -255,5 +255,4 @@ async function main() {
     logs.error("Error:", err);
   }
 }
-
 main();

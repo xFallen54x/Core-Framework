@@ -5,9 +5,10 @@ import {
   Player as IPlayer,
   EntityHealthComponent,
   EntityComponent,
-  TitleDisplayOptions,
+  EntityInventoryComponent
 } from "@minecraft/server";
 import { ModalForm, MessageForm, ActionForm } from "../forms/index.js";
+import { EntityInventory } from "inventory/index.js";
 
 // Define a Player class
 export class Player {
@@ -58,9 +59,28 @@ export class Player {
   }
 
   /**
+   * Retrieves the name of the player.
+   *
+   * @returns The name of the player.
+   */
+  public getName(): string {
+    return this.name;
+  }
+
+  /**
+   * Retrieves the name of the player.
+   *
+   * @returns The Display name of the player.
+   */
+  public getDisplayName(): string {
+    return this.displayName;
+  }
+
+  /**
    * Get the position of the player
    *
    * @returns The location of the player
+   * @deprecated Use getLocation instead
    */
   getPos(): { x: number; y: number; z: number } {
     return this._IPlayer.location;
@@ -182,8 +202,10 @@ export class Player {
    * @param x - The x-coordinate of the location.
    * @param y - The y-coordinate of the location.
    * @param z - The z-coordinate of the location.
+   * 
+   * @returns True if the player was teleported, false otherwise
    */
-  public teleport(x: number, y: number, z: number) {
+  public teleport(x: number, y: number, z: number): boolean {
     if (
       typeof x !== "number" ||
       typeof y !== "number" ||
@@ -198,7 +220,11 @@ export class Player {
     location.y = y;
     location.z = z;
 
-    this._IPlayer.teleport(location);
+    try {
+      this._IPlayer.teleport(location);
+    } catch (error) {
+      return false;
+    }
 
     return true;
   }
@@ -257,8 +283,7 @@ export class Player {
   /**
    *  Set the player's health.
    *
-   * @param health The health to set.
-   * If health is less than 0, the player will be killed.
+   * @param health The health to set. If health is less than 0, the player will be killed.
    * @returns True if the health was set successfully, false otherwise.
    */
   public setHealth(health: number): boolean {
@@ -292,4 +317,113 @@ export class Player {
     const display = this._IPlayer.onScreenDisplay;
     display.updateSubtitle(message);
   }
+
+  /**
+   * Sends a message to the player.
+   * 
+   * @param message Message content to set.
+   */
+  public sendMessage(message: string): void {
+    this._IPlayer.sendMessage(message);
+  }
+
+  /**
+   * TODO: Mute the player.
+   * Mutes the player.
+   * 
+   * @param reason Reason for muting the player.
+   */
+  public mutePlayer(reason: string): void {
+    // Your code to mute the player goes here
+  }
+
+  /**
+   * TODO: Unmute the player.
+   * Unmutes the player.
+   * 
+   * @param reason Reason for unmute the player.
+   */
+  public unmutePlayer(reason: string): void {
+    
+  }
+
+  /**
+   * Kicks the player.
+   * 
+   * @param reason Reason for kicking the player.
+   */
+  public kick(reason = "You have been kicked from the game!"): void {
+    this.destroy(reason)
+  }
+
+  /**
+   * TODO: Ban the player.
+   * Bans the player.
+   * 
+   * @param reason Reason for banning the player.
+   * @param duration Duration for the ban.
+   */
+  public ban(reason: string, duration: number): void {
+    // code to ban the player goes here
+  }
+
+  /** TODO: Unban the player.
+   * Unbans the player.
+   * 
+   * @param reason Reason for unbanning the player.
+   */
+  public unban(reason: string): void {
+    
+  }
+
+  /**
+   * Gets the players current location.
+   * @returns The cordinates of the player.
+   */
+  public getLocation(): Object {
+    const pos = this._IPlayer.location
+
+    return {
+      x: Math.floor(pos.x),
+      y: Math.floor(pos.y),
+      z: Math.floor(pos.z),
+    }
+  }
+
+  /**
+   * Gets precise location (decimals)
+   * @returns
+   */
+  public getPreciseLocation(): Object {
+    const pos = this._IPlayer.location
+
+    return {
+      x: pos.x,
+      y: pos.y,
+      z: pos.z,
+    }
+  }
+
+  /**
+   * Gets the players inventory.
+   * @returns
+   */
+  public getInventory(): EntityInventory {
+    return new EntityInventory(
+      this._IPlayer.getComponent('minecraft:inventory') as EntityInventoryComponent,
+    )
+  }
+
+  /**
+   * Gets players selected slot in hotbar.
+   * @returns
+   */
+  public getSelectedSlot(): number {
+    return this._IPlayer.selectedSlot
+  }
+
+  /**
+   * Gets the players health.
+   * @returns
+   */
 }
