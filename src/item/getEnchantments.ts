@@ -1,3 +1,6 @@
+
+//Currently Broken, I'll fix this later
+
 // Regular imports.
 import { ItemEnchantsComponent, ItemStack, EnchantmentTypes, Enchantment } from '@minecraft/server'
 

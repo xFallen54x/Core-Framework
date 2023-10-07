@@ -128,7 +128,7 @@ async function deleteFilesInDirectory(directory) {
           reject(err);
           return;
         } else {
-          await timeout(1.5);
+          await timeout(1);
           logs.spacer().info(
             "Deleting files in directory:",
             directory.replace(__dirname, ""),
@@ -143,7 +143,7 @@ async function deleteFilesInDirectory(directory) {
             await deleteFile(filePath);
           }
         }
-
+        
         resolve();
       });
     });

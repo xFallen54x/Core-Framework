@@ -116,7 +116,10 @@ export class Item {
         return this._IItem.getComponent(component);
     }
     /**
+     *
      * Gets all enchants on the item.
+     *
+     * @warning This is currently broken
      * @returns
      */
     getEnchantments() {

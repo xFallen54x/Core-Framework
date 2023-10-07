@@ -1,3 +1,4 @@
+//Currently Broken, I'll fix this later
 // Regular imports.
 import { EnchantmentTypes } from '@minecraft/server';
 /**

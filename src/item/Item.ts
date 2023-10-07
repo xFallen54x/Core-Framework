@@ -139,7 +139,10 @@ export class Item {
   }
 
   /**
+   * 
    * Gets all enchants on the item.
+   * 
+   * @warning This is currently broken
    * @returns
    */
   public getEnchantments(): Enchantment[] {
